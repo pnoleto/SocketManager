@@ -8,8 +8,12 @@
     <Title>SocketManager</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/pnoleto/SocketManager/tree/develop</RepositoryUrl>
-    <NeutralLanguage>aa-ER</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackAsTool>False</PackAsTool>
+    <FileVersion>1.0.0</FileVersion>
+    <PackageProjectUrl>https://github.com/pnoleto/SocketManager/tree/develop</PackageProjectUrl>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AnalysisLevel>6.0</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
