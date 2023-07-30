@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Shared
 {
-    [Obsolete("This class is obsolete because it was move to a diferent namespace, please use SocketManager namespace instead.")]
+    [Obsolete("This class is obsolete because it was move to a diferent namespace, please use SoocketManager namespace instead.")]
     public class SocketManager
     {
         public SocketManager() { }
@@ -154,7 +154,7 @@ namespace Shared
     }
 }
 
-namespace SocketManager
+namespace SoocketManager
 {
     public class SocketManager
     {
