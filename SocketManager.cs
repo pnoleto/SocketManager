@@ -28,11 +28,8 @@ namespace SoocketManager
             {
                 try
                 {
-                    if (!webSocket.Connected)
-                    {
-                        await webSocket.ConnectAsync(endpoint, cancellationToken);
-                        notifyConnection?.Report(webSocket);
-                    }
+                    await webSocket.ConnectAsync(endpoint, cancellationToken);
+                    notifyConnection?.Report(webSocket);
                 }
                 catch { }
 
@@ -48,7 +45,7 @@ namespace SoocketManager
         /// <param name="notifyConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task ConnectionListenerAsync(
+        public static async Task ListenerAsync(
             Socket webSocket,
             IPEndPoint endpoint,
             IProgress<Socket> notifyConnection,
@@ -82,7 +79,7 @@ namespace SoocketManager
         /// <param name="cancellationToken"></param>
         /// <param name="notifyProgress"></param>
         /// <returns></returns>
-        public async static Task<byte[]> SocketReceiveAsync(
+        public async static Task<byte[]> ReceiveAsync(
             Socket webSocket,
             CancellationToken cancellationToken,
             IProgress<long>? notifyProgress = null)
@@ -92,17 +89,16 @@ namespace SoocketManager
 
             using (MemoryStream stream = new())
             {
-                if (StreamAvaliable(webSocket))
+                do
                 {
-                    while ((readBytes = await webSocket.ReceiveAsync(buffer, SocketFlags.None, cancellationToken)) > ZERO)
-                    {
-                        await stream.WriteAsync(buffer.AsMemory(ZERO, readBytes), cancellationToken);
+                    readBytes = await webSocket.ReceiveAsync(buffer.AsMemory(ZERO, buffer.Length), SocketFlags.None, cancellationToken);
+                    await stream.WriteAsync(buffer.AsMemory(ZERO, readBytes), cancellationToken);
 
-                        notifyProgress?.Report(stream.Length);
+                    notifyProgress?.Report(readBytes);
 
-                        cancellationToken.ThrowIfCancellationRequested();
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
+                while (StreamAvaliable(webSocket));
 
                 return stream.ToArray();
             }
@@ -116,7 +112,7 @@ namespace SoocketManager
         /// <param name="cancellationToken"></param>
         /// <param name="notifyProgress"></param>
         /// <returns></returns>
-        public static async Task SocketSendAsync(
+        public static async Task SendAsync(
             Socket webSocket,
             byte[] buffer,
             CancellationToken cancellationToken,
@@ -124,12 +120,8 @@ namespace SoocketManager
         {
             long sent;
 
-            while ((sent = await webSocket.SendAsync(buffer, SocketFlags.None, cancellationToken)) > ZERO)
-            {
-                notifyProgress?.Report(sent);
-
-                cancellationToken.ThrowIfCancellationRequested();
-            }
+            sent = await webSocket.SendAsync(buffer.AsMemory(ZERO, buffer.Length), SocketFlags.None, cancellationToken);
+            notifyProgress?.Report(sent);
         }
 
         /// <summary>
