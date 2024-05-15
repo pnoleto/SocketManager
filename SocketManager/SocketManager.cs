@@ -3,72 +3,75 @@ using System.Net;
 
 namespace SoocketManager
 {
-    public class SocketManager
+    public static class SocketManager
     {
-        private const int MAX_RECEIVE_BUFFER_SIZE = 8192;
+        private const int RECEIVE_BUFFER_SIZE = 2048;
         private const int ZERO = 0;
 
-        public SocketManager() { }
-
         /// <summary>
-        /// Use this method to create a task and try to connect to a specific host.
+        /// Use this method to create a task and try to connect to a specific host. this task is a long runner.
         /// </summary>
         /// <param name="webSocket"></param>
         /// <param name="endpoint"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="notifyConnection"</param>
         /// <returns></returns>
-        public static async Task ConnectAsync(
-            Socket webSocket,
+        public static Task ConnectAsync(
+            this Socket webSocket,
             IPEndPoint endpoint,
             CancellationToken cancellationToken,
             IProgress<Socket>? notifyConnection = null)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            return Task.Run(async () =>
             {
-                try
+                while (true)
                 {
-                    await webSocket.ConnectAsync(endpoint, cancellationToken);
-                    notifyConnection?.Report(webSocket);
+                    try
+                    {
+                        await webSocket.ConnectAsync(endpoint, cancellationToken);
+                        notifyConnection?.Report(webSocket);
+                    }
+                    catch
+                    {
+                        Thread.Sleep(5000);
+                    }
                 }
-                catch { }
-
-                cancellationToken.ThrowIfCancellationRequested();
-            }
+            }, cancellationToken);
         }
 
         /// <summary>
-        /// This method creates a task to listen for remote socket connections and notify each connected socket to the specified method
+        /// This method creates a task to listen for remote socket connections and notify each connected socket to the specified method. this method is a long runner
         /// </summary>
         /// <param name="webSocket"></param>
         /// <param name="endpoint"></param>
         /// <param name="notifyConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task ListenerAsync(
-            Socket webSocket,
+        public static Task ListenerAsync(
+            this Socket webSocket,
             IPEndPoint endpoint,
             IProgress<Socket> notifyConnection,
             CancellationToken cancellationToken)
         {
-            webSocket.Bind(endpoint);
-            webSocket.Listen();
-
-            while (!cancellationToken.IsCancellationRequested)
+            return Task.Run(async () =>
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                webSocket.Bind(endpoint);
+                webSocket.Listen(10);
 
-                try
+                while (true)
                 {
-                    Socket client = await webSocket.AcceptAsync(cancellationToken);
-                    notifyConnection.Report(client);
+                    try
+                    {
+                        Socket client = await webSocket.AcceptAsync(cancellationToken);
+                        notifyConnection.Report(client);
+                    }
+                    catch
+                    {
+                        webSocket.Close();
+                        throw;
+                    }
                 }
-                catch
-                {
-                    webSocket.Close();
-                    throw;
-                }
-            }
+            }, cancellationToken);
         }
 
 
@@ -79,29 +82,30 @@ namespace SoocketManager
         /// <param name="cancellationToken"></param>
         /// <param name="notifyProgress"></param>
         /// <returns></returns>
-        public async static Task<byte[]> ReceiveAsync(
-            Socket webSocket,
+        public static Task<byte[]> ReceiveAsync(
+            this Socket webSocket,
             CancellationToken cancellationToken,
             IProgress<long>? notifyProgress = null)
         {
-            int readBytes;
-            byte[] buffer = new byte[MAX_RECEIVE_BUFFER_SIZE];
-
-            using (MemoryStream stream = new())
+            return Task.Run(async () =>
             {
+                int readBytes;
+                byte[] buffer = new byte[RECEIVE_BUFFER_SIZE];
+
+                using MemoryStream stream = new();
+
                 do
                 {
                     readBytes = await webSocket.ReceiveAsync(buffer.AsMemory(ZERO, buffer.Length), SocketFlags.None, cancellationToken);
+
                     await stream.WriteAsync(buffer.AsMemory(ZERO, readBytes), cancellationToken);
 
                     notifyProgress?.Report(readBytes);
-
-                    cancellationToken.ThrowIfCancellationRequested();
                 }
                 while (StreamAvaliable(webSocket));
 
                 return stream.ToArray();
-            }
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -112,16 +116,17 @@ namespace SoocketManager
         /// <param name="cancellationToken"></param>
         /// <param name="notifyProgress"></param>
         /// <returns></returns>
-        public static async Task SendAsync(
-            Socket webSocket,
+        public static Task SendAsync(
+            this Socket webSocket,
             byte[] buffer,
             CancellationToken cancellationToken,
             IProgress<long>? notifyProgress = null)
         {
-            long sent;
-
-            sent = await webSocket.SendAsync(buffer.AsMemory(ZERO, buffer.Length), SocketFlags.None, cancellationToken);
-            notifyProgress?.Report(sent);
+            return Task.Run(async () =>
+            {
+                int sent = await webSocket.SendAsync(buffer.AsMemory(ZERO, buffer.Length), SocketFlags.None, cancellationToken);
+                notifyProgress?.Report(sent);
+            });
         }
 
         /// <summary>
@@ -129,7 +134,7 @@ namespace SoocketManager
         /// </summary>
         /// <param name="webSocket"></param>
         /// <returns></returns>
-        public static bool StreamAvaliable(Socket webSocket)
+        public static bool StreamAvaliable(this Socket webSocket)
         {
             return webSocket.Available > uint.MinValue;
         }
