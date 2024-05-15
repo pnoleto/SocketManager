@@ -17,7 +17,7 @@
     <Copyright>Copyleft</Copyright>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <SignAssembly>False</SignAssembly>
-    <Version>1.2.6</Version>
+    <Version>1.2.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
