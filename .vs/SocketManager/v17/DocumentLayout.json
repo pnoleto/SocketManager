@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\repos\\SocketManager\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8211A518-C081-4877-9BC7-D8D3A1C4BA7A}|SocketManager\\SocketManager.csproj|d:\\repos\\socketmanager\\socketmanager\\socketmanager.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{8211A518-C081-4877-9BC7-D8D3A1C4BA7A}|SocketManager\\SocketManager.csproj|solutionrelative:socketmanager\\socketmanager.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D7D43F21-CBF0-423C-804D-416610B0F6DD}|SocketManagerTest\\SocketManagerTest.csproj|d:\\repos\\socketmanager\\socketmanagertest\\socketmanagertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D7D43F21-CBF0-423C-804D-416610B0F6DD}|SocketManagerTest\\SocketManagerTest.csproj|solutionrelative:socketmanagertest\\socketmanagertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 278,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SocketManager",
+              "DocumentMoniker": "D:\\repos\\SocketManager\\SocketManager\\SocketManager.csproj",
+              "RelativeDocumentMoniker": "SocketManager\\SocketManager.csproj",
+              "ToolTip": "D:\\repos\\SocketManager\\SocketManager\\SocketManager.csproj",
+              "RelativeToolTip": "SocketManager\\SocketManager.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-12-11T20:46:55.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SocketManagerTests.cs",
+              "DocumentMoniker": "D:\\repos\\SocketManager\\SocketManagerTest\\SocketManagerTests.cs",
+              "RelativeDocumentMoniker": "SocketManagerTest\\SocketManagerTests.cs",
+              "ToolTip": "D:\\repos\\SocketManager\\SocketManagerTest\\SocketManagerTests.cs",
+              "RelativeToolTip": "SocketManagerTest\\SocketManagerTests.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwCQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-11T20:32:44.806Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 75,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

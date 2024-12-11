@@ -8,8 +8,8 @@ namespace SocketManagerTest
     public class Tests
     {
 
-        CancellationToken cancellationToken = new CancellationToken();
-        private readonly byte[] LOCALHOST = new byte[] { 127, 0, 0, 1 };
+        CancellationTokenSource cancellationTokenSource = new();
+        private readonly byte[] LOCALHOST = [127, 0, 0, 1];
         private const int PORT = 1448;
 
         [SetUp]
@@ -18,29 +18,29 @@ namespace SocketManagerTest
         }
 
         [Test]
-        public async Task SendMEssageBetweenSockets()
+        public async Task SendMessageBetweenSockets()
         {
             Socket? connectedSocket = null;
 
-            var _notify = new Progress<Socket>((x) => { connectedSocket = x; });
+            Progress<Socket> _notify = new((sock) => { connectedSocket = sock; });
 
             var _address = new IPEndPoint(new IPAddress(LOCALHOST), PORT);
 
             Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            client.ListenerAsync(_address, _notify, cancellationToken);
+            client.ListenerAsync(_address, _notify, cancellationTokenSource.Token);
 
-            server.ConnectAsync(_address, cancellationToken, null);
+            server.ConnectAsync(_address, cancellationTokenSource.Token, null);
 
             while (connectedSocket == null)
             {
                 //Waiting connection
             }
 
-            await connectedSocket.SendAsync(Encoding.UTF8.GetBytes("Hello word!"), cancellationToken);
+            await connectedSocket.SendAsync(Encoding.UTF8.GetBytes("Hello word!"), cancellationTokenSource.Token);
 
-            byte[] receivedBytes = await server.ReceiveAsync(cancellationToken);
+            byte[] receivedBytes = await server.ReceiveAsync(cancellationTokenSource.Token);
 
             Assert.That(receivedBytes, Is.Not.Empty);
         }

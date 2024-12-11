@@ -105,6 +105,7 @@ namespace SoocketManager
                 while (StreamAvaliable(webSocket));
 
                 return stream.ToArray();
+
             }, cancellationToken);
         }
 
